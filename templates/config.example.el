@@ -74,6 +74,7 @@
 ;;
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
+(setq  tab-always-indent t)
 
 (after! ess
   (add-hook! 'prog-mode-hook #'rainbow-delimiters-mode)
