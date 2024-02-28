@@ -125,4 +125,32 @@
              '("\\.[rR]md\\'" . poly-gfm+r-mode))
 (setq markdown-code-block-braces t)
 
+(use-package! lsp-bridge
+  :config
+  (setq lsp-bridge-enable-log nil)
+  ;; (global-lsp-bridge-mode)
+)
+(setq lsp-bridge-completion-obey-trigger-characters-p nil)
+;; (setq lsp-bridge-enable-completion-in-string 1)
+;; (setq acm-backend-search-file-words-max-number 100)
+
+;; jupyter also have completion, so this disable jupyter completion
+(add-hook 'python-mode-hook (lambda() (lsp-bridge-mode 1)))
+
+ (add-hook 'python-mode-hook (lambda() (company-mode 0)))
+
+ (add-hook 'python-mode-hook (lambda ()
+                               (setq python-indent 4)))
+
+(add-hook 'python-mode-hook (lambda () (flymake-mode -1)))
+(add-hook 'python-mode-hook (lambda () (flycheck-mode -1)))
+(map! :after python
+      :map python-mode-map
+      :n [C-c C-c] #'python-shell-send-region
+      :n [C-c C-c] #'python-shell-send-statement
+      :n [C-return] #'python-shell-send-region
+      :n [C-return] #'python-shell-send-statement)
+
+(setq jupyter-repl-echo-eval-p t)
+(setq native-comp-jit-compilation-deny-list '("jupyter.*.el"))
 
