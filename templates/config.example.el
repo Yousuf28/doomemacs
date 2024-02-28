@@ -74,3 +74,55 @@
 ;;
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
+
+(after! ess
+  (add-hook! 'prog-mode-hook #'rainbow-delimiters-mode)
+  (add-hook! 'prog-mode-hook #'display-fill-column-indicator-mode)
+  ;; We don’t want R evaluation to hang the editor
+  (setq ess-eval-visibly 'nowait)
+  (setq ess-set-style 'RStudio-)
+  ;; Hoobly Classifieds, Pittsburgh, PA
+  ;; (setq ess--CRAN-mirror "https://cran.mirrors.hoobly.com/")
+  ;; National Institute for Computational Sciences, Oak Ridge, TN
+  (setq ess--CRAN-mirror "https://mirrors.nics.utk.edu/cran/")
+  ;; Statlib, Carnegie Mellon University, Pittsburgh, PA
+  ;; (setq ess--CRAN-mirror "http://lib.stat.cmu.edu/R/CRAN/")
+  ;; enable syntax highlighing in R
+  (setq ess-R-font-lock-keywords
+        '((ess-R-fl-keyword:keywords . t)
+          (ess-R-fl-keyword:constants . t)
+          (ess-R-fl-keyword:modifiers . t)
+          (ess-R-fl-keyword:fun-defs . t)
+          (ess-R-fl-keyword:assign-ops . t)
+          (ess-R-fl-keyword:%op% . t)
+          (ess-fl-keyword:fun-calls . t)
+          (ess-fl-keyword:numbers . t)
+          (ess-fl-keyword:operators . t)
+          (ess-fl-keyword:= . t)
+          (ess-R-fl-keyword:F&T . t)))
+
+  (setq comint-move-point-for-output t)
+  (add-hook! 'inferior-ess-mode-hook
+    (setq ansi-color-for-comint-mode 'filter))
+  (add-hook 'inferior-ess-mode-hook #'doom-mark-buffer-as-real-h))
+
+(set-popup-rules!
+  '(("*R$" :side left :height 1 :width .5)
+    ("^R:" :side right :height 1 :width .5)
+    ("*help" :side bottom :height .5 :width .5)
+
+    )
+  )
+
+(map! :after ess
+      :map ess-mode-map
+      :n [C-return] #'ess-eval-region-or-line-and-step
+      :n [C-c C-c] #'ess-eval-region-or-line-and-step)
+
+(setq ess-use-flymake nil) ;; disable Flymake
+
+(add-to-list 'auto-mode-alist
+             '("\\.[rR]md\\'" . poly-gfm+r-mode))
+(setq markdown-code-block-braces t)
+
+
